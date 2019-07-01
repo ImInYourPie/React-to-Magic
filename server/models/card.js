@@ -26,6 +26,11 @@ const cardSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true
+    },
+    registerDate: {
+        type: Date,
+        required: true,
+        default: Date.now
     }
 });
 

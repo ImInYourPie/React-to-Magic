@@ -6,7 +6,7 @@ const config = require("./config/database");
 require('dotenv').config();
 
 // CONNECT TO DATABASE
-mongoose.connect(config.database, { useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect(config.database, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false });
 
 let db = mongoose.connection;
 
@@ -30,10 +30,12 @@ app.use(cors());
 
 // IMPORT ROUTES
 const register = require("./routes/register");
+const login = require("./routes/login");
 const cards = require("./routes/cards");
 
 // ROUTING
 app.use("/register", register);
+app.use("/login", login);
 app.use("/cards", cards);
 
 // PORT

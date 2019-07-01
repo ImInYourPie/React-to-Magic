@@ -1,5 +1,16 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
+
+function jwtSignUser(user) {
+    const ONE_WEEK = 60 * 60 * 24 * 7;
+    return jwt.sign(user, process.env.JWT_SECRET, {
+        expiresIn: ONE_WEEK
+    })
+}
+
+
 
 class Authentication {
 
@@ -38,8 +49,34 @@ class Authentication {
 
     }
 
+
     // TESTING PURPOSES
-    static async test(req, res){
+    static async login(req, res) {
+        try {
+            const { username, password } = req.body;
+
+            const user = await User.findOne({ username: username }).lean();
+
+            if (!user) {
+                return res.status(400).send({ error: "O nome de utilizador que inseriu não existe" })
+            }
+
+            const isPasswordValid = bcrypt.compareSync(password, user.password);
+
+            if (!isPasswordValid) {
+                return res.status(400).send({ error: "A password que inseriu está incorreta" })
+            }
+
+            delete user.password;
+            delete user.__v;
+            res.status(200).send({ user: user, token: jwtSignUser(user) });
+        } catch (error) {
+            res.status(500).send({ error: "Alguma coisa correu mal, mas não é culpa tua :)" });
+        }
+    }
+
+    // TESTING PURPOSES
+    static async test(req, res) {
         const users = await User.find({}).lean();
         res.status(200).send(users);
     }
