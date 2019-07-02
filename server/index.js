@@ -36,12 +36,14 @@ const register = require("./routes/register");
 const login = require("./routes/login");
 const cards = require("./routes/cards");
 const decks = require("./routes/decks");
+const admin = require("./routes/admin");
 
 // ROUTING
 app.use("/register", register);
 app.use("/login", login);
 app.use("/cards", cards);
 app.use("/decks", decks);
+app.use("/admin", admin);
 
 // PORT
 const port = process.env.PORT || 3000;
