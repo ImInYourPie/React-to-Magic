@@ -21,6 +21,6 @@ const deckSchema = new Schema({
     }]
 });
 
-const Card = mongoose.model('Card', cardSchema);
+const Deck = mongoose.model('Deck', deckSchema);
 
-module.exports = Card;
+module.exports = Deck;

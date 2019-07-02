@@ -28,15 +28,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // CORS FOR CROSS ORIGIN
 app.use(cors());
 
+
+require("./config/passport")
+
 // IMPORT ROUTES
 const register = require("./routes/register");
 const login = require("./routes/login");
 const cards = require("./routes/cards");
+const decks = require("./routes/decks");
 
 // ROUTING
 app.use("/register", register);
 app.use("/login", login);
 app.use("/cards", cards);
+app.use("/decks", decks);
 
 // PORT
 const port = process.env.PORT || 3000;

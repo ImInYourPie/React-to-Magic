@@ -10,8 +10,6 @@ function jwtSignUser(user) {
     })
 }
 
-
-
 class Authentication {
 
     static register(req, res) {
