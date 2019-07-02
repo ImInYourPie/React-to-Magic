@@ -1,4 +1,5 @@
 const Card = require("../models/card");
+const Deck = require("../models/deck");
 
 class CardsController {
 
@@ -32,6 +33,7 @@ class CardsController {
         const cardId = req.params.id;
         try {
             await Card.findOneAndDelete({ _id: cardId });
+            await Deck.update({ user: req.user._id }, { $pull: { cards: cardId } });
             res.status(203).send({ success: `Carta apagada` })
         } catch (error) {
             res.status(400).send(error)

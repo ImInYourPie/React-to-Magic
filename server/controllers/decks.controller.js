@@ -29,6 +29,7 @@ class DecksController {
             for (let i = 0; i < cards.length; i++) {
                 newDeck.cards.push(cards[i]._id)
             }
+            
             await newDeck.save();
             res.status(203).send({ success: `Varalho ${req.body.name} registada` })
 
