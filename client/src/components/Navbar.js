@@ -119,9 +119,13 @@ export default function PersistentDrawerLeft() {
                     </IconButton>
                     <Typography variant="h6" noWrap>
                         React to Magic
-          </Typography>
-                    <Button component={Link} to="/login" color="inherit">Login</Button>
-                    <Button component={Link} to="/register" color="inherit">Register</Button>
+          </Typography> 
+                    {true && (
+                        <div>
+                            <Button component={Link} to="/login" color="inherit">Login</Button>
+                            <Button component={Link} to="/register" color="inherit">Register</Button>
+                        </div>
+                    )}
                 </Toolbar>
             </AppBar>
             <Drawer

@@ -37,7 +37,6 @@ class AdminController {
         } else {
             try {
                 const cards = await Card.find({}).lean();
-                console.log(cards)
                 res.status(200).send(cards);
             } catch (error) {
                 res.status(500).send(error);
@@ -53,7 +52,7 @@ class AdminController {
                 const cardId = req.params.id;
                 const currentCard = await Card.findById(cardId);
                 await Card.findByIdAndDelete(cardId);
-                await Deck.update({ user: currentCard.user }, { $pull: { cards: cardId } }, { safe: true });
+                await Deck.findOneAndUpdate({ user: currentCard.user }, { $pull: { cards: cardId } }, { safe: true });
                 let newNotification = new Notification({
                     description: `A sua carta ${currentCard.name} foi apagada por um administrador`,
                     user: currentCard.user
@@ -126,7 +125,7 @@ class AdminController {
                     cards: []
                 }
                 for (let i = 0; i < cards.length; i++) {
-                    newDeck.cards.push(cards[i]._id)
+                    update.cards.push(cards[i]._id)
                 }
                 await Deck.findByIdAndUpdate(deckId, update);
                 let newNotification = new Notification({
@@ -174,7 +173,7 @@ class AdminController {
                 await User.findByIdAndDelete(userId);
                 await Card.find({ user: userId }).remove();
                 await Deck.find({ user: userId }).remove();
-                res.status(203).send({ success: `O utilizador, as suas cartas, e os seus varalhos foram apagados com sucesso` });
+                res.status(203).send({ success: `O utilizador, as suas cartas, e os seus baralhos foram apagados com sucesso` });
             } catch (error) {
                 res.status(400).send(error)
             }

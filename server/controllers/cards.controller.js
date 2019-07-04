@@ -3,6 +3,7 @@ const Deck = require("../models/deck");
 
 class CardsController {
 
+    // for testing
     static async returnCards(req, res) {
         const cards = await Card.find({}).lean();
         if (!cards.length) return res.status(404).send({ error: "Não foram encontradas cartas na base de dados" });
@@ -22,19 +23,23 @@ class CardsController {
             mana: req.body.mana,
             name: req.body.name,
             description: req.body.description,
-            user: req.user._id // TODO: implement passport
+            user: req.user._id
         });
-
         await newCard.save();
-        res.status(203).send({ success: `Carta ${req.body.name} registada` })
+        res.status(203).send({ success: `Carta ${req.body.name} registada`, card: newCard })
     }
 
     static async deleteCard(req, res) {
         const cardId = req.params.id;
+        const userId = req.user._id;
         try {
-            await Card.findOneAndDelete({ _id: cardId });
-            await Deck.update({ user: req.user._id }, { $pull: { cards: cardId } });
-            res.status(203).send({ success: `Carta apagada` })
+            const deletedCard = await Card.findOneAndDelete({ _id: cardId, user: userId });
+            if (deletedCard) {
+                await Deck.findOneAndUpdate({ user: userId }, { $pull: { cards: cardId } });
+                res.status(203).send({ success: `Carta apagada` })
+            } else {
+                res.status(403).send({ error: "Não tem permisão para apagar esta carta" })
+            }
         } catch (error) {
             res.status(400).send(error)
         }
@@ -42,14 +47,19 @@ class CardsController {
 
     static async updateCard(req, res) {
         const cardId = req.params.id;
+        const userId = req.user._id
         const update = {
             mana: req.body.mana,
             name: req.body.name,
             description: req.body.description
         }
         try {
-            await Card.findByIdAndUpdate(cardId, update);
-            res.status(203).send({ success: `Carta ${req.body.name} atualizada` });
+            const updatedCard = await Card.findOneAndUpdate({ _id: cardId, user: userId }, update);
+            if (updatedCard) {
+                res.status(203).send({ success: `Carta ${req.body.name} atualizada`, card: updatedCard });
+            } else {
+                res.status(403).send({ error: "Não tem permisão para editar esta carta" })
+            }
         } catch (error) {
             res.status(400).send(error)
         }

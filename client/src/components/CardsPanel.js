@@ -1,46 +1,49 @@
 import React, { Component } from 'react'
-import CardsService from "../services/cards.service";
 import CardItem from "./CardItem";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import { connect } from "react-redux";
+import { getCards } from "../actions/cardActions"
 
 class CardPanel extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            cards: [],
-            errorMessage: ""
-        }
-    }
 
-    async componentDidMount() {
+    componentDidMount() {
         try {
-            const returnedCards = await CardsService.getCards();
-            this.setState({ cards: returnedCards.data })
-            console.log(this.state.cards)
+            this.props.getCards();
+            console.log(this.props.getCards())
         } catch (error) {
             this.setState({ errorMessage: "Não foram encontradas cartas" })
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps.newCard)
+        if (nextProps.newCard) this.props.cards.unshift(nextProps.newCard)
+    }
+
     render() {
-        if (this.state.cards.length) {
-            return this.state.cards.map((card) => {
-                console.log(card); return (
-                    <Grid key={card._id} item lg={2}>
+        if (this.props.cards.length) {
+            return this.props.cards.map((card) => {
+                return (
+                    <Grid key={card._id} item xs={3}>
                         <CardItem {...card} />
                     </Grid>
                 )
             })
         } else {
             return <Typography gutterBottom variant="h5" component="h2">
-                {this.state.errorMessage}
+                You don't have any cards in your collection. Add one!
             </Typography>
         }
     }
 }
 
-export default CardPanel
+const mapStateToProps = state => ({
+    cards: state.cards.items,
+    newCard: state.cards.item
+})
+
+export default connect(mapStateToProps, { getCards })(CardPanel);
 
 
 

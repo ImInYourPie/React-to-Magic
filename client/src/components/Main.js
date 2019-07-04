@@ -1,12 +1,14 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import CardsPanel from "./CardsPanel";
+import CardsView from "./CardsView";
+import Home from "./Home";
 
 const Main = () => (
     <main>
         <Switch>
-            <Route exact path="/cards" component={CardsPanel}></Route>
-            <Route exact path="/decks" component={CardsPanel}></Route>
+            {/* <Route exact path="/home" component={Home}></Route> */}
+            <Route exact path="/cards" component={CardsView}></Route>
+            <Route exact path="/decks" component={CardsView}></Route>
             {/* <Route exact path="/login" component={Login}></Route> */}
         </Switch>
     </main>
