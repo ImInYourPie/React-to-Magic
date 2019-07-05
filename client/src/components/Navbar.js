@@ -21,6 +21,7 @@ import { faWizardsOfTheCoast } from '@fortawesome/free-brands-svg-icons';
 import { faBox } from '@fortawesome/free-solid-svg-icons'
 import Button from '@material-ui/core/Button';
 import { Link } from "react-router-dom";
+import Grid from "@material-ui/core/Grid"
 
 library.add(faWizardsOfTheCoast, faBox);
 
@@ -119,12 +120,15 @@ export default function PersistentDrawerLeft() {
                     </IconButton>
                     <Typography variant="h6" noWrap>
                         React to Magic
-          </Typography> 
+          </Typography>
                     {true && (
-                        <div>
-                            <Button component={Link} to="/login" color="inherit">Login</Button>
-                            <Button component={Link} to="/register" color="inherit">Register</Button>
-                        </div>
+                        <Grid container direction="row" alignItems="right">
+                            <Grid item xs={10}></Grid>
+                            <Grid item xs={2} alignItems="right">
+                                <Button component={Link} to="/login" color="inherit">Login</Button>
+                                <Button component={Link} to="/register" color="inherit">Register</Button>
+                            </Grid>
+                        </Grid>
                     )}
                 </Toolbar>
             </AppBar>

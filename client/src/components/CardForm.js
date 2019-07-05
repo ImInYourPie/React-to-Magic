@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 200,
     color: "red"
   },
   rightIcon: {
@@ -52,9 +51,9 @@ function CardForm(props) {
   return (
     <div>
       <h2>Add a Card</h2>
-      <form className={classes.container} onSubmit={submitCard} noValidate autoComplete="off">
-        <Grid container direction="row" spacing={2} justify="space-around" alignItems="flex-end">
-          <Grid item md={10}>
+      <form className={classes.container} onSubmit={submitCard} autoComplete="off">
+        <Grid container direction="row" spacing={1} justify="space-around" alignItems="center">
+          <Grid item md={3}>
             <TextField
               id="standard-number"
               label="Mana"
@@ -62,38 +61,50 @@ function CardForm(props) {
               value={values.mana}
               onChange={handleChange('mana')}
               type="number"
+              fullWidth
+              variant="outlined"
               className={classes.textField}
               InputLabelProps={{
                 shrink: true,
               }}
-              margin="normal"
+              margin="dense"
             />
+            </Grid>
+            <Grid item md={3}>
             <TextField
               id="standard-name"
               label="Name"
+              fullWidth
+              variant="outlined"
               className={classes.textField}
               value={values.name}
               onChange={handleChange('name')}
-              margin="normal"
+              margin="dense"
             />
+            </Grid>
+            <Grid item md={3}>
             <TextField
               id="standard-name"
               label="Description"
               required
+              fullWidth
+              variant="outlined"
               className={classes.textField}
               value={values.description}
               onChange={handleChange('description')}
-              margin="normal"
+              margin="dense"
             />
-          </Grid>
-          <Grid item md={2}>
-            <Button variant="contained" type="submit" color="primary" className={classes.button}>
+            </Grid>
+            
+          <Grid item md={2} alignItems="right">
+            <Button variant="contained" fullWidth type="submit" color="primary">
               Add Card
               <AddIcon className={classes.rightIcon}>Send</AddIcon>
             </Button>
           </Grid>
         </Grid>
       </form>
+      <br></br>
     </div>
   );
 }

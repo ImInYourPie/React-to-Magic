@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '900px',
     },
     main: {
         marginTop: theme.spacing(8),
@@ -38,6 +37,7 @@ export default function StickyFooter() {
 
     return (
         <div className={classes.root}>
+            <br></br>
             <CssBaseline />
             <footer className={classes.footer}>
                 <Container maxWidth="sm">

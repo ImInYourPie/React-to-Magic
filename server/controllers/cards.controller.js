@@ -5,14 +5,14 @@ class CardsController {
 
     // for testing
     static async returnCards(req, res) {
-        const cards = await Card.find({}).lean();
+        const cards = await Card.find({}).sort("-date");
         if (!cards.length) return res.status(404).send({ error: "Não foram encontradas cartas na base de dados" });
         else return res.status(200).send(cards);
     }
 
     static async returnUserCards(req, res) {
         const userId = req.user._id;
-        const cards = await Card.find({ user: userId });
+        const cards = await Card.find({ user: userId }).sort("-registerDate");
         if (!cards.length) return res.status(404).send({ error: "Não foram encontradas cartas associadas a este utilizador" });
         else return res.status(200).send(cards);
     }
