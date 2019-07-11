@@ -7,7 +7,7 @@ class AdminController {
 
     static async returnUsers(req, res) {
         if (req.user.userType !== "admin") {
-            return res.status(403).send({ error: "Não tem permisões para ver este recurso" });
+            return res.status(403).send({ error: "You don't have permision to view this resource" });
         } else {
             try {
                 const users = await User.find().select("-password").lean();
@@ -20,7 +20,7 @@ class AdminController {
 
     static async returnDecks(req, res) {
         if (req.user.userType !== "admin") {
-            return res.status(403).send({ error: "Não tem permisões para ver este recurso" });
+            return res.status(403).send({ error: "You don't have permision to view this resource" });
         } else {
             try {
                 const deck = await Deck.find().lean();
@@ -33,7 +33,7 @@ class AdminController {
 
     static async returnCards(req, res) {
         if (req.user.userType !== "admin") {
-            return res.status(403).send({ error: "Não tem permisões para ver este recurso" });
+            return res.status(403).send({ error: "You don't have permision to view this resource" });
         } else {
             try {
                 const cards = await Card.find({}).lean();
@@ -46,7 +46,7 @@ class AdminController {
 
     static async deleteCard(req, res) {
         if (req.user.userType !== "admin") {
-            return res.status(403).send({ error: "Não tem permisões para ver este recurso" });
+            return res.status(403).send({ error: "You don't have permision to view this resource" });
         } else {
             try {
                 const cardId = req.params.id;
@@ -54,11 +54,11 @@ class AdminController {
                 await Card.findByIdAndDelete(cardId);
                 await Deck.findOneAndUpdate({ user: currentCard.user }, { $pull: { cards: cardId } }, { safe: true });
                 let newNotification = new Notification({
-                    description: `A sua carta ${currentCard.name} foi apagada por um administrador`,
+                    description: `Your card, ${currentCard.name}, was deleted by an admin`,
                     user: currentCard.user
                 });
                 newNotification.save();
-                res.status(200).send({ success: `Carta apagada com sucesso` })
+                res.status(200).send({ success: `Card deleted with success` })
             } catch (error) {
                 res.status(500).send(error);
             }
@@ -67,18 +67,18 @@ class AdminController {
 
     static async deleteDeck(req, res) {
         if (req.user.userType !== "admin") {
-            return res.status(403).send({ error: "Não tem permisões para ver este recurso" });
+            return res.status(403).send({ error: "You don't have permision to view this resource" });
         } else {
             try {
                 const deckId = req.params.id;
                 const currentDeck = await Deck.findById(deckId);
                 await Deck.findByIdAndDelete(deckId);
                 let newNotification = new Notification({
-                    description: `O seu varalho ${currentDeck.name} foi apagado por um administrador`,
+                    description: `Your deck, ${currentDeck.name}, was deleted by an admin`,
                     user: currentCard.user
                 });
                 newNotification.save();
-                res.status(200).send({ success: `Varalho apagado com sucesso` })
+                res.status(200).send({ success: `Deck deleted with success` })
             } catch (error) {
                 res.status(500).send(error);
             }
@@ -87,7 +87,7 @@ class AdminController {
 
     static async updateCard(req, res) {
         if (req.user.userType !== "admin") {
-            return res.status(403).send({ error: "Não tem permisões para ver este recurso" });
+            return res.status(403).send({ error: "You don't have permision to view this resource" });
         } else {
             try {
                 const cardId = req.params.id;
@@ -99,11 +99,11 @@ class AdminController {
                 }
                 await Card.findByIdAndUpdate(cardId, update);
                 let newNotification = new Notification({
-                    description: `A sua carta ${currentCard.name} foi atualizado por um administrador`,
+                    description: `Your card, ${currentCard.name}, was updated by an admin`,
                     user: currentCard.user
                 });
                 newNotification.save();
-                res.status(203).send({ success: `Carta ${req.body.name} atualizada` });
+                res.status(203).send({ success: `Card ${req.body.name} updated` });
             } catch (error) {
                 res.status(400).send(error)
             }
@@ -112,7 +112,7 @@ class AdminController {
 
     static async updateDeck(req, res) {
         if (req.user.userType !== "admin") {
-            return res.status(403).send({ error: "Não tem permisões para ver este recurso" });
+            return res.status(403).send({ error: "You don't have permision to view this resource" });
         } else {
             try {
                 const deckId = req.params.id;
@@ -129,11 +129,11 @@ class AdminController {
                 }
                 await Deck.findByIdAndUpdate(deckId, update);
                 let newNotification = new Notification({
-                    description: `O seu varalho ${currentDeck.name} foi atualizado por um administrador`,
+                    description: `Your deck, ${currentDeck.name}, was updated by an admin`,
                     user: currentDeck.user
                 });
                 newNotification.save();
-                res.status(203).send({ success: `Varalho ${req.body.name} atualizado` });
+                res.status(203).send({ success: `Deck ${req.body.name} updated` });
             } catch (error) {
                 res.status(400).send(error)
             }
@@ -142,7 +142,7 @@ class AdminController {
 
     static async updateUser(req, res) {
         if (req.user.userType !== "admin") {
-            return res.status(403).send({ error: "Não tem permisões para ver este recurso" });
+            return res.status(403).send({ error: "You don't have permision to view this resource" });
         } else {
             try {
                 const userId = req.params.id;
@@ -153,11 +153,11 @@ class AdminController {
                 }
                 const updatedUser = await User.findByIdAndUpdate(userId, update);
                 let newNotification = new Notification({
-                    description: `Uma ou mais credenciais foram atualizadas por um administrador. Username: ${updatedUser.username}, Nome: ${updatedUser.realName}, Privilégios: ${updatedUser.userType}`,
+                    description: `One or more of your credentials were updated by an admin. Username: ${updatedUser.username}, Name: ${updatedUser.realName}, Privileges: ${updatedUser.userType}`,
                     user: req.params.id
                 });
                 newNotification.save();
-                res.status(203).send({ success: `Utilizador ${req.body.name} atualizado` });
+                res.status(203).send({ success: `User ${req.body.name} updated` });
             } catch (error) {
                 res.status(400).send(error)
             }
@@ -166,14 +166,14 @@ class AdminController {
 
     static async deleteUser(req, res) {
         if (req.user.userType !== "admin") {
-            return res.status(403).send({ error: "Não tem permisões para ver este recurso" });
+            return res.status(403).send({ error: "You don't have permision to view this resource" });
         } else {
             try {
                 const userId = req.params.id;
                 await User.findByIdAndDelete(userId);
                 await Card.find({ user: userId }).remove();
                 await Deck.find({ user: userId }).remove();
-                res.status(203).send({ success: `O utilizador, as suas cartas, e os seus baralhos foram apagados com sucesso` });
+                res.status(203).send({ success: `The user, his cards, and his decks were deleted with success` });
             } catch (error) {
                 res.status(400).send(error)
             }

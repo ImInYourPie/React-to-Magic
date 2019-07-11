@@ -39,9 +39,11 @@ module.exports = {
 
         if (error || usernameExists) {
             if (usernameExists) {
+                console.log("heythere")
                 usernameExistsError = "O nome de utilizador já se encontra registado"
             }
-            res.status(400).send({ error: error.details[0].message, usernameExistsError })
+            const errors = error ? error.details[0].message : null;
+            res.status(400).send({ error: errors, usernameExistsError })
         } else {
             next(); // PASS TO NEXT MIDDLEWARE
         }

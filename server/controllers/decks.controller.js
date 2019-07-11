@@ -5,20 +5,21 @@ class DecksController {
 
     static async returnsDecks(req, res) {
         const decks = await Deck.find({}).populate("cards").lean();
-        if (!decks.length) return res.status(404).send({ error: "Não foram encontradas cartas na base de dados" });
+        if (!decks.length) return res.status(404).send({ error: "No decks were found" });
         else return res.status(200).send(decks);
     }
 
     static async returnUserDecks(req, res) {
         const userId = req.user._id;
-        const decks = await Deck.find({ user: userId }).populate("cards").lean();
-        if (!decks.length) return res.status(404).send({ error: "Não foram encontrados varalhos para este utilizador" });
+        const decks = await Deck.find({ user: userId }).sort("-registerDate").populate("cards").lean();
+        if (!decks.length) return res.status(404).send({ error: "No decks were found" });
         else return res.status(200).send(decks);
     }
 
     static async registerDeck(req, res) {
         try {
             const cards = req.body.cards;
+            console.log(cards)
             // NEW USER WITH BODY PROPERTIES
             let newDeck = new Deck({
                 name: req.body.name,
@@ -30,9 +31,10 @@ class DecksController {
                 newDeck.cards.push(cards[i]._id)
             }
 
+            console.log("sup")
             await newDeck.save();
             const deck = await Deck.findById(newDeck._id).populate("cards") // Better way? 
-            res.status(203).send({ success: `Baralho ${req.body.name} registado`, deck })
+            res.status(203).send({ success: `Deck ${req.body.name} created`, deck })
 
         } catch (error) {
             res.status(400).send(error)
@@ -45,7 +47,7 @@ class DecksController {
         try {
             const deletedDeck = await Deck.findOneAndDelete({ _id: deckId, user: userId });
             if (deletedDeck) res.status(200).send({ success: `Baralho apagado` });
-            else res.status(403).send({ error: "Não tem permisão para apagar este baralho" })
+            else res.status(403).send({ error: "You dont't have permisions to delete this resource" })
         } catch (error) {
             res.status(400).send(error)
         }
@@ -67,9 +69,9 @@ class DecksController {
         try {
             const updatedDeck = await Deck.findOneAndUpdate({ _id: deckId, user: userId }, update).populate("cards");
             if (updatedDeck) {
-                res.status(203).send({ success: `Baralho ${req.body.name} atualizado`, deck: updatedDeck });
+                res.status(203).send({ success: `Deck ${req.body.name} updated`, deck: updatedDeck });
             } else {
-                res.status(403).send({ error: "Não tem permisão para atualizar este baralho" })
+                res.status(403).send({ error: "You don't have permisions to update this deck" })
             }
         } catch (error) {
             res.status(400).send(error)

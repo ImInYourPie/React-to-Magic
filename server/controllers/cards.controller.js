@@ -26,19 +26,21 @@ class CardsController {
             user: req.user._id
         });
         await newCard.save();
-        res.status(203).send({ success: `Carta ${req.body.name} registada`, card: newCard })
+        res.status(203).send({ success: `Card ${req.body.name} created`, card: newCard })
     }
 
     static async deleteCard(req, res) {
         const cardId = req.params.id;
         const userId = req.user._id;
+        console.log(cardId)
+        console.log(req.user)
         try {
             const deletedCard = await Card.findOneAndDelete({ _id: cardId, user: userId });
             if (deletedCard) {
                 await Deck.findOneAndUpdate({ user: userId }, { $pull: { cards: cardId } });
-                res.status(203).send({ success: `Carta apagada` })
+                res.status(203).send({ success: `Card deleted` })
             } else {
-                res.status(403).send({ error: "Não tem permisão para apagar esta carta" })
+                res.status(403).send({ error: "You don't have permisions to delete this card" })
             }
         } catch (error) {
             res.status(400).send(error)
@@ -56,9 +58,9 @@ class CardsController {
         try {
             const updatedCard = await Card.findOneAndUpdate({ _id: cardId, user: userId }, update);
             if (updatedCard) {
-                res.status(203).send({ success: `Carta ${req.body.name} atualizada`, card: updatedCard });
+                res.status(203).send({ success: `Card ${req.body.name} updated`, card: updatedCard });
             } else {
-                res.status(403).send({ error: "Não tem permisão para editar esta carta" })
+                res.status(403).send({ error: "You don't have permisions to update this card" })
             }
         } catch (error) {
             res.status(400).send(error)

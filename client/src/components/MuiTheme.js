@@ -1,17 +1,18 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   typography: {
-    useNextVariants: true,
+    useNextVariants: true
   },
   palette: {
     primary: {
-      light: '#63ccff',
-      main: '#FF0B00',
-      dark: '#CC0A00',
-      contrastText: '#fff',
-    },
-  },
+      light: "#63ccff",
+      main: "#0B98FF",
+      dark: "#0873BF",
+      error: "#ff0000",
+      contrastText: "#fff"
+    }
+  }
 });
 
 export default theme;

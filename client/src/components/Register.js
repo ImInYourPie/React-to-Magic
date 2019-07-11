@@ -1,42 +1,61 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import React, { useState, useEffect } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import MuiLink from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { register, login } from "../actions/userActions";
 
 const useStyles = makeStyles(theme => ({
-  '@global': {
+  "@global": {
     body: {
-      backgroundColor: theme.palette.common.white,
-    },
+      backgroundColor: theme.palette.common.white
+    }
   },
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: "#0873BF"
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(3)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    margin: theme.spacing(3, 0, 2)
+  }
 }));
 
-export default function SignUp() {
+function SignUp(props) {
   const classes = useStyles();
+  const [username, setUsername] = useState("");
+  const [realname, setRealname] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    const userData = {
+      username: username,
+      realname: realname,
+      password: password,
+      confirmPassword: confirmPassword
+    };
+    console.log(userData);
+    props.register(userData, props.history);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -48,7 +67,7 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <form className={classes.form}>
+        <form onSubmit={handleSubmit} className={classes.form}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -59,6 +78,9 @@ export default function SignUp() {
                 id="username"
                 label="Username"
                 autoFocus
+                error={props.errors}
+                value={username}
+                onChange={event => setUsername(event.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -66,9 +88,12 @@ export default function SignUp() {
                 variant="outlined"
                 required
                 fullWidth
-                id="realName"
+                id="realname"
                 label="Real Name"
-                name="realName"
+                name="realname"
+                error={props.errors}
+                value={realname}
+                onChange={event => setRealname(event.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -80,6 +105,9 @@ export default function SignUp() {
                 label="Password"
                 type="password"
                 id="password"
+                error={props.errors}
+                value={password}
+                onChange={event => setPassword(event.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -89,11 +117,28 @@ export default function SignUp() {
                 fullWidth
                 name="passwordConfirm"
                 label="Confirm Password"
-                type="passwordConfirm"
+                type="password"
+                error={props.errors}
                 id="passwordConfirm"
+                value={confirmPassword}
+                onChange={event => setConfirmPassword(event.target.value)}
               />
             </Grid>
           </Grid>
+          {props.errors && (
+            <Grid container justify="center" spacing={5}>
+              <Grid item>
+                <Typography variant="body2" color="error">
+                  {props.errors.usernameExistsError}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body2" color="error">
+                  {props.errors.error}
+                </Typography>
+              </Grid>
+            </Grid>
+          )}
           <Button
             type="submit"
             fullWidth
@@ -105,9 +150,9 @@ export default function SignUp() {
           </Button>
           <Grid container justify="center">
             <Grid item>
-              <Link href="#" variant="body2">
+              <MuiLink component={Link} to="/login" variant="body2">
                 Already have an account? Login now
-              </Link>
+              </MuiLink>
             </Grid>
           </Grid>
         </form>
@@ -115,3 +160,17 @@ export default function SignUp() {
     </Container>
   );
 }
+
+const mapStateToProps = state => ({
+  errors: state.UI.errors
+});
+
+const mapActionsToProps = {
+  register,
+  login
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(SignUp);

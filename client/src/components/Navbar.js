@@ -1,167 +1,237 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWizardsOfTheCoast } from '@fortawesome/free-brands-svg-icons';
-import { faBox } from '@fortawesome/free-solid-svg-icons'
-import Button from '@material-ui/core/Button';
+import React from "react";
+import { fade, makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import InputBase from "@material-ui/core/InputBase";
+import Badge from "@material-ui/core/Badge";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import MenuIcon from "@material-ui/icons/Menu";
+import SearchIcon from "@material-ui/icons/Search";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import MailIcon from "@material-ui/icons/Mail";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
-import Grid from "@material-ui/core/Grid"
-
-library.add(faWizardsOfTheCoast, faBox);
-
-const drawerWidth = 240;
+import { connect } from "react-redux";
+import { typography } from "@material-ui/system";
+import Grid from "@material-ui/core/Grid";
+import { logoutUser } from "../actions/userActions";
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        display: 'flex',
-    },
-    appBar: {
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-    },
-    appBarShift: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: drawerWidth,
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    hide: {
-        display: 'none',
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-    },
-    drawerPaper: {
-        width: drawerWidth,
-    },
-    drawerHeader: {
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 8px',
-        ...theme.mixins.toolbar,
-        justifyContent: 'flex-end',
-    },
-    content: {
-        flexGrow: 1,
-        padding: theme.spacing(3),
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        marginLeft: -drawerWidth,
-    },
-    contentShift: {
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
-    },
-    title: {
-        flexGrow: 1,
+  grow: {
+    flexGrow: 1
+  },
+  menuButton: {
+    marginRight: theme.spacing(2)
+  },
+  title: {
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block"
     }
+  },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25)
+    },
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(3),
+      width: "auto"
+    }
+  },
+  searchIcon: {
+    width: theme.spacing(7),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  inputRoot: {
+    color: "inherit"
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 7),
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: 200
+    }
+  },
+  sectionDesktop: {
+    display: "none",
+    [theme.breakpoints.up("md")]: {
+      display: "flex"
+    }
+  },
+  sectionMobile: {
+    display: "flex",
+    [theme.breakpoints.up("md")]: {
+      display: "none"
+    }
+  }
 }));
 
-export default function PersistentDrawerLeft() {
-    const classes = useStyles();
-    const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+const Navbar = ({ authenticated, user, logoutUser }) => {
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-    function handleDrawerOpen() {
-        setOpen(true);
-    }
+  // const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-    function handleDrawerClose() {
-        setOpen(false);
-    }
+  function handleMobileMenuClose() {
+    setMobileMoreAnchorEl(null);
+  }
 
-    return (
-        <div className={classes.root}>
-            <CssBaseline />
-            <AppBar
-                position="fixed"
-                className={clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
-                })}
-            >
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="Open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        className={clsx(classes.menuButton, open && classes.hide)}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" noWrap>
-                        React to Magic
+  function handleMenuClose() {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  }
+
+  function handleMobileMenuOpen(event) {
+    setMobileMoreAnchorEl(event.currentTarget);
+  }
+
+  const handleLogout = () => {
+    logoutUser();
+  };
+
+  const mobileMenuId = "primary-search-account-menu-mobile";
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      {!authenticated && (
+        <MenuItem>
+          <Button component={Link} to="/login" color="inherit">
+            Login
+          </Button>
+        </MenuItem>
+      )}
+      {!authenticated && (
+        <MenuItem>
+          <Button component={Link} to="/register" color="inherit">
+            Register
+          </Button>
+        </MenuItem>
+      )}
+      {authenticated && (
+        <MenuItem>
+          <Button component={Link} to="/cards" color="inherit">
+            My Cards
+          </Button>
+        </MenuItem>
+      )}
+      {authenticated && (
+        <MenuItem>
+          <Button component={Link} to="/decks" color="inherit">
+            My Decks
+          </Button>
+        </MenuItem>
+      )}
+      {authenticated && (
+        <MenuItem>
+          <Button>Olá {user.username}</Button>
+        </MenuItem>
+      )}
+      {authenticated && (
+        <MenuItem>
+          <Button onClick={handleLogout} color="inherit">
+            Logout
+          </Button>
+        </MenuItem>
+      )}
+    </Menu>
+  );
+  return (
+    <div className={classes.grow}>
+      <AppBar position="static" className={classes.appbar}>
+        <Toolbar>
+          <Typography className={classes.title} variant="h6" noWrap>
+            React to Magic
           </Typography>
-                    {true && (
-                        <Grid container direction="row" alignItems="right">
-                            <Grid item xs={10}></Grid>
-                            <Grid item xs={2} alignItems="right">
-                                <Button component={Link} to="/login" color="inherit">Login</Button>
-                                <Button component={Link} to="/register" color="inherit">Register</Button>
-                            </Grid>
-                        </Grid>
-                    )}
-                </Toolbar>
-            </AppBar>
-            <Drawer
-                className={classes.drawer}
-                variant="persistent"
-                anchor="left"
-                open={open}
-                classes={{
-                    paper: classes.drawerPaper,
-                }}
+          <div className={classes.grow} />
+          <div className={classes.sectionDesktop}>
+            {user.userType === "admin" && (
+              <Button component={Link} to="/decks" color="inherit">
+                Admin Panel
+              </Button>
+            )}
+            {authenticated && (
+              <Button component={Link} to="/cards" color="inherit">
+                My Cards
+              </Button>
+            )}
+            {authenticated && (
+              <Button component={Link} to="/decks" color="inherit">
+                My Decks
+              </Button>
+            )}
+            {authenticated && (
+              <Button color="inherit">
+                <AccountCircle /> {user.username}
+              </Button>
+            )}
+            {authenticated && (
+              <Button onClick={handleLogout} color="inherit">
+                Logout
+              </Button>
+            )}
+            {!authenticated && (
+              <Button component={Link} to="/login" color="inherit">
+                Login
+              </Button>
+            )}
+            {!authenticated && (
+              <Button component={Link} to="/register" color="inherit">
+                Register
+              </Button>
+            )}
+          </div>
+          <div className={classes.sectionMobile}>
+            <IconButton
+              aria-label="Show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
             >
-                <div className={classes.drawerHeader}>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>
-                    <ListItem button component={Link} to="/cards">
-                        <ListItemIcon>
-                            <FontAwesomeIcon size="2x" icon={['fab', 'wizards-of-the-coast']} />
-                        </ListItemIcon>
-                        <ListItemText primary="Cards" />
-                    </ListItem>
-                    <ListItem button component={Link} to="/decks">
-                        <ListItemIcon>
-                            <FontAwesomeIcon size="2x" icon="box" />
-                        </ListItemIcon>
-                        <ListItemText primary="Decks" />
-                    </ListItem>
-                </List>
-            </Drawer>
-        </div>
-    );
-}
+              <MoreIcon />
+            </IconButton>
+          </div>
+        </Toolbar>
+      </AppBar>
+      {renderMobileMenu}
+    </div>
+  );
+};
+
+const mapStateToProps = state => ({
+  authenticated: state.user.authenticated,
+  user: state.user.user
+});
+
+const mapActionsToProps = { logoutUser };
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(Navbar);

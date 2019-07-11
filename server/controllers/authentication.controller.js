@@ -38,7 +38,7 @@ class Authentication {
                             console.log(err);
                             return;
                         } else {
-                            res.status(201).send({ success: "Registo efetuado com sucesso!" }); // SEND SUCCESS MESSAGE
+                            res.status(201).send({ success: "Registered with success" }); // SEND SUCCESS MESSAGE
                         }
                     })
                 })
@@ -56,20 +56,20 @@ class Authentication {
             const user = await User.findOne({ username: username }).lean();
 
             if (!user) {
-                return res.status(400).send({ error: "O nome de utilizador que inseriu não existe" })
+                return res.status(400).send({ error: "The username doesn't exist" })
             }
 
             const isPasswordValid = bcrypt.compareSync(password, user.password);
 
             if (!isPasswordValid) {
-                return res.status(400).send({ error: "A password que inseriu está incorreta" })
+                return res.status(400).send({ error: "Incorret password" })
             }
 
             delete user.password;
             delete user.__v;
             res.status(200).send({ user: user, token: jwtSignUser(user) });
         } catch (error) {
-            res.status(500).send({ error: "Alguma coisa correu mal, mas não é culpa tua :)" });
+            res.status(500).send({ error: "Something went wrong" });
         }
     }
 

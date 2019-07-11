@@ -1,20 +1,57 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import CardsView from "./CardsView";
-import Login from "./Login"
+import DecksView from "./DecksView";
+import Login from "./Login";
 import Home from "./Home";
-import Register from "./Register"
+import Register from "./Register";
+import store from "../store";
+import { connect } from "react-redux";
 
-const Main = () => (
+const Main = ({ authenticated }) => {
+  const PrivateUIRoute = ({ component: Component, ...rest }) => (
+    <Route
+      {...rest}
+      render={props =>
+        authenticated ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/login" component={Login} />
+        )
+      }
+    />
+  );
+
+  const PrivateAuthRoute = ({ component: Component, ...rest }) => (
+    <Route
+      {...rest}
+      render={props =>
+        !authenticated ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/cards" component={CardsView} />
+        )
+      }
+    />
+  );
+  return (
     <main>
-        <Switch>
-            {/* <Route exact path="/home" component={Home}></Route> */}
-            <Route exact path="/cards" component={CardsView}></Route>
-            <Route exact path="/decks" component={CardsView}></Route>
-            <Route exact path="/login" component={Login}></Route>
-            <Route exact path="/register" component={Register}></Route>
-        </Switch>
+      <Switch>
+        <PrivateAuthRoute path="/login" component={Login} />
+        <PrivateAuthRoute path="/register" component={Register} />
+        <PrivateUIRoute path="/cards" component={CardsView} />
+        <PrivateUIRoute path="/decks" component={DecksView} />
+        <Redirect to="/cards"/>
+      </Switch>
     </main>
-)
+  );
+};
 
-export default Main;
+const mapStateToProps = state => ({
+  authenticated: state.user.authenticated,
+});
+
+
+export default connect(
+  mapStateToProps,
+)(Main);
