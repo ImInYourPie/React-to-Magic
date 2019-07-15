@@ -1,16 +1,12 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
-import { connect } from "react-redux";
-import { addCard } from "../actions/cardActions";
-import { PropTypes } from "prop-types";
-import { Typography } from "@material-ui/core";
 import DeckBuilder from "./DeckBuilder";
-import store from "../store";
 import { getCards } from "../actions/cardActions";
+import { addDeck } from "../actions/deckActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -24,18 +20,39 @@ const useStyles = makeStyles(theme => ({
   },
   rightIcon: {
     marginLeft: theme.spacing(1)
+  },
+  button: {
+    background: "linear-gradient(to right bottom, #03FFE1, #0B98FF)",
+    color: "white"
   }
 }));
 
 const CardForm = props => {
   const classes = useStyles();
-  let cards = [];
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
+  let cards = []
+
+  console.log(cards)
+  React.useEffect(() => {
+    dispatch(getCards())
+  }, [])
+  
+
+  // React.useEffect(() => {
+  //   async function fetchCards() {
+  //     const response = await dispatch(getCards());
+  //     setCards(response);
+  //     console.log(response);
+  //     console.log(cards)
+  //   };
+  //   fetchCards()
+  // }, [])
+
 
   const openDialog = async event => {
-    event.preventDefault();
-    cards = await store.dispatch(getCards());
-    console.log(cards);
+    event.preventDefault()
+    cards = await (dispatch(getCards()));
     setOpen(true);
     console.log(open);
   };
@@ -55,6 +72,7 @@ const CardForm = props => {
             <Button
               variant="contained"
               onClick={openDialog}
+              className={classes.button}
               fullWidth
               type="submit"
               color="primary"
@@ -67,9 +85,12 @@ const CardForm = props => {
       </form>
       <br />
       <DeckBuilder
-        sendData={props.getData}
+        currentCards={[]}
         cards={cards}
         open={open}
+        action={addDeck}
+        _id={""}
+        currentName={""}
         closeDialog={closeDialog}
       />
     </div>
@@ -84,7 +105,4 @@ const CardForm = props => {
 //   return { addCard: () => dispatch({type: "ADD_CARD"}) }
 // }
 
-export default connect(
-  null,
-  { addCard }
-)(CardForm);
+export default CardForm;

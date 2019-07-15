@@ -4,7 +4,8 @@ import {
   SEARCH_DECKS,
   DELETE_DECK,
   SET_LOADING_DECKS,
-  SET_DECKS_ERRORS
+  SET_DECKS_ERRORS,
+  UPDATE_DECK
 } from "../actions/types";
 
 const initialState = {
@@ -52,6 +53,20 @@ export default function(state = initialState, action) {
         items: [action.payload, ...state.items],
         loading: false,
         errors: null
+      };
+    case UPDATE_DECK:
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item._id === action.payload._id
+            ? {
+                ...item,
+                name: action.payload.name,
+                cards: action.payload.cards
+              }
+            : item
+        ),
+        loading: false
       };
     default:
       return state;

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import CardItem from "./CardItem";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -20,7 +20,9 @@ const CardPanel = props => {
   const cards = useSelector(state => state.cards.items);
   const dispatch = useDispatch();
 
-  if(!cards.length) dispatch(getCards())
+  React.useEffect(() => {
+    dispatch(getCards())
+  }, [])
 
   const Panel = (
     <Grid container spacing={2}>
@@ -32,7 +34,7 @@ const CardPanel = props => {
       {!!cards.length &&
         cards.map(card => {
           return (
-            <Grid key={card._id} item md={3} xs={12}>
+            <Grid key={card._id} item md={2} xs={6}>
               <CardItem {...card} />
             </Grid>
           );

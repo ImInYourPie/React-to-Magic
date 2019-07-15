@@ -3,7 +3,8 @@ import {
   ADD_CARD,
   DELETE_CARD,
   SET_LOADING_CARDS,
-  SET_CARDS_ERRORS
+  SET_CARDS_ERRORS,
+  UPDATE_CARD
 } from "../actions/types";
 
 const initialState = {
@@ -40,6 +41,21 @@ export default function(state = initialState, action) {
         loading: false
       };
     }
+    case UPDATE_CARD:
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item._id === action.payload._id
+            ? {
+                ...item,
+                mana: action.payload.mana,
+                name: action.payload.name,
+                description: action.payload.description
+              }
+            : item
+        ),
+        loading: false
+      };
     case SET_LOADING_CARDS: {
       return {
         ...state,

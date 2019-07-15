@@ -5,7 +5,6 @@ import Dialog from "@material-ui/core/Dialog";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -18,11 +17,9 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Paper from "@material-ui/core/Paper";
 import { connect } from "react-redux";
 import { addDeck } from "../actions/deckActions";
-import store from "../store";
-import { getCards, addCard } from "../actions/cardActions";
 import TextField from "@material-ui/core/TextField";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
+import _ from "lodash";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -31,6 +28,9 @@ const useStyles = makeStyles(theme => ({
   title: {
     marginLeft: theme.spacing(2),
     flex: 1
+  },
+  paper: {
+    height: "500"
   }
 }));
 
@@ -46,19 +46,30 @@ function intersection(a, b) {
   return a.filter(value => b.indexOf(value) !== -1);
 }
 
-const FullScreenDialog = ({ sendData, cards, open, closeDialog }) => {
+const FullScreenDialog = ({
+  cards,
+  currentName,
+  open,
+  closeDialog,
+  currentCards,
+  action,
+  _id
+}) => {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([]);
   const [right, setRight] = React.useState([]);
   const [name, setName] = React.useState("");
+  const [error, setError] = React.useState([]);
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    setLeft(cards);
-  }, [cards]);
+    setRight(currentCards);
+    setLeft(_.differenceBy(cards, currentCards, "_id"));
+    setName(currentName);
+  }, [currentCards, currentName, cards]);
 
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
@@ -96,14 +107,35 @@ const FullScreenDialog = ({ sendData, cards, open, closeDialog }) => {
   };
 
   const handleClose = () => {
-    setRight([]);
+    setRight(currentCards);
+    setLeft(_.differenceBy(cards, currentCards, "_id"));
+    setName(currentName);
+    setError("");
     closeDialog();
   };
 
-  const handleSave = async (event, name, cards) => {
+  const handleSave = (event, name, cards) => {
     event.preventDefault();
-    dispatch(addDeck(name, cards));
-    closeDialog();
+    if (name === "") {
+      return setError("You must give the deck a name");
+    }
+    if (cards.length === 0) {
+      return setError(
+        "You must add at least 1 card, even if a 1 card deck seems stupid"
+      );
+    } else {
+      const deckData = {
+        name: name,
+        cards: cards,
+        _id: _id
+      };
+      dispatch(action(deckData));
+      setRight(currentCards);
+      setLeft(_.differenceBy(cards, currentCards, "_id"));
+      setName(currentName);
+      setError("");
+      closeDialog();
+    }
   };
 
   const customList = items => {
@@ -141,7 +173,12 @@ const FullScreenDialog = ({ sendData, cards, open, closeDialog }) => {
   return (
     <div>
       <Dialog fullScreen open={open} TransitionComponent={Transition}>
-        <AppBar className={classes.appBar}>
+        <AppBar
+          className={classes.appBar}
+          style={{
+            background: "linear-gradient(to right bottom, #03FFE1, #0B98FF)"
+          }}
+        >
           <Toolbar>
             <IconButton
               onClick={handleClose}
@@ -170,6 +207,11 @@ const FullScreenDialog = ({ sendData, cards, open, closeDialog }) => {
           className={classes.root}
         >
           <Grid item xs={12} md={8}>
+            <Typography align="center" variant="h6" color="error">
+              {error}
+            </Typography>
+          </Grid>
+          <Grid item xs={10} md={8}>
             <TextField
               variant="outlined"
               margin="normal"

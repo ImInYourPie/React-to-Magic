@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography, TextField, Button } from "@material-ui/core/";
+import { Grid, Typography, TextField } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
@@ -22,10 +22,10 @@ export default function CardsSearch() {
   const classes = useStyles;
   return (
     <Grid container spacing={2} alignItems="center" direction="row">
-      <Grid item md={2}>
+      <Grid item md={2} xs={4}>
         <Typography variant="h5">My Cards</Typography>
       </Grid>
-      <Grid item md={10}>
+      <Grid item md={10} xs={8}>
         <form onSubmit>
           <TextField
             id="standard-name"

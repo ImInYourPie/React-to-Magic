@@ -1,10 +1,3 @@
-import {
-  GET_CARDS,
-  ADD_CARD,
-  SET_ERRORS,
-  LOADING_UI,
-  STOP_LOADING_UI
-} from "./types";
 import axios from "axios";
 
 export const getCards = () => dispatch => {
@@ -15,7 +8,10 @@ export const getCards = () => dispatch => {
       dispatch({ type: "GET_CARDS", payload: res.data });
     })
     .catch(error => {
-      dispatch({ type: "SET_CARDS_ERRORS", payload: error.response.data.error });
+      dispatch({
+        type: "SET_CARDS_ERRORS",
+        payload: error.response.data.error
+      });
     });
 };
 
@@ -34,7 +30,10 @@ export const addCard = cardData => dispatch => {
       });
     })
     .catch(error => {
-      dispatch({ type: "SET_CARDS_ERRORS", payload: error.response.data.error });
+      dispatch({
+        type: "SET_CARDS_ERRORS",
+        payload: error.response.data.error
+      });
     });
 };
 
@@ -42,9 +41,30 @@ export const deleteCard = cardId => dispatch => {
   axios
     .delete(`/cards/delete/${cardId}`)
     .then(() => {
+      console.log(cardId)
       dispatch({
         type: "DELETE_CARD",
         payload: cardId
+      });
+      dispatch({ type: "CLEAR_ERRORS" });
+    })
+    .catch(error => {
+      dispatch({ type: "SET_ERRORS", payload: error.response.data });
+    });
+};
+
+export const updateCard = cardData => dispatch => {
+  dispatch({ type: "SET_LOADING_CARDS" });
+  axios
+    .put(`/cards/update/${cardData._id}`, {
+      mana: cardData.mana,
+      name: cardData.name,
+      description: cardData.description
+    })
+    .then(() => {
+      dispatch({
+        type: "UPDATE_CARD",
+        payload: cardData
       });
       dispatch({ type: "CLEAR_ERRORS" });
     })

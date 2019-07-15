@@ -6,8 +6,6 @@ import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import { connect } from "react-redux";
 import { addCard } from "../actions/cardActions";
-import { PropTypes } from "prop-types";
-import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -21,6 +19,10 @@ const useStyles = makeStyles(theme => ({
   },
   rightIcon: {
     marginLeft: theme.spacing(1)
+  },
+  button: {
+    background: "linear-gradient(to right bottom, #03FFE1, #0B98FF)",
+    color: "white"
   }
 }));
 
@@ -53,18 +55,18 @@ function CardForm(props) {
       <br />
       <br />
       <form
-        className={classes.container}
+        
         onSubmit={submitCard}
         autoComplete="off"
       >
         <Grid
           container
           direction="row"
-          spacing={1}
           justify="space-around"
           alignItems="center"
+          spacing={1}
         >
-          <Grid item md={3}>
+          <Grid item xs={2}>
             <TextField
               id="standard-number"
               label="Mana"
@@ -75,42 +77,39 @@ function CardForm(props) {
               fullWidth
               variant="outlined"
               required
-              className={classes.textField}
               InputLabelProps={{
                 shrink: true
               }}
               margin="dense"
             />
           </Grid>
-          <Grid item md={3}>
+          <Grid item md={3} xs={10}>
             <TextField
               id="standard-name"
               label="Name"
               fullWidth
               variant="outlined"
               required
-              className={classes.textField}
               value={values.name}
               onChange={handleChange("name")}
               margin="dense"
             />
           </Grid>
-          <Grid item md={3}>
+          <Grid item md={4} xs={12}>
             <TextField
               id="standard-name"
               label="Description"
               required
               fullWidth
               variant="outlined"
-              className={classes.textField}
               value={values.description}
               onChange={handleChange("description")}
               margin="dense"
             />
           </Grid>
 
-          <Grid item md={2} alignItems="right">
-            <Button variant="contained" fullWidth type="submit" color="primary">
+          <Grid item md={2} xs={12} alignItems="right">
+            <Button className={classes.button} variant="contained" fullWidth type="submit" >
               Add Card
               <AddIcon className={classes.rightIcon}>Send</AddIcon>
             </Button>

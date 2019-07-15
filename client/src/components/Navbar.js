@@ -4,26 +4,21 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
-import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
-import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { typography } from "@material-ui/system";
-import Grid from "@material-ui/core/Grid";
 import { logoutUser } from "../actions/userActions";
 
 const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1
+  },
+  appbar: {
+    backgroundColor: theme.palette.mainGradient
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -120,50 +115,43 @@ const Navbar = ({ authenticated, user, logoutUser }) => {
       onClose={handleMobileMenuClose}
     >
       {!authenticated && (
-        <MenuItem>
-          <Button component={Link} to="/login" color="inherit">
-            Login
-          </Button>
+        <MenuItem component={Link} to="/login">
+          Login
         </MenuItem>
       )}
       {!authenticated && (
-        <MenuItem>
-          <Button component={Link} to="/register" color="inherit">
-            Register
-          </Button>
+        <MenuItem component={Link} to="/register">
+          Register
+        </MenuItem>
+      )}
+      {user.userType === "admin" && (
+        <MenuItem component={Link} to="/admin">
+          Admin Panel
         </MenuItem>
       )}
       {authenticated && (
-        <MenuItem>
-          <Button component={Link} to="/cards" color="inherit">
-            My Cards
-          </Button>
+        <MenuItem component={Link} to="/cards">
+          My Cards
         </MenuItem>
       )}
       {authenticated && (
-        <MenuItem>
-          <Button component={Link} to="/decks" color="inherit">
-            My Decks
-          </Button>
+        <MenuItem component={Link} to="/decks">
+          My Decks
         </MenuItem>
       )}
-      {authenticated && (
-        <MenuItem>
-          <Button>Olá {user.username}</Button>
-        </MenuItem>
-      )}
-      {authenticated && (
-        <MenuItem>
-          <Button onClick={handleLogout} color="inherit">
-            Logout
-          </Button>
-        </MenuItem>
-      )}
+      {authenticated && <MenuItem>Olá {user.username}</MenuItem>}
+      {authenticated && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
     </Menu>
   );
   return (
     <div className={classes.grow}>
-      <AppBar position="static" className={classes.appbar}>
+      <AppBar
+        position="static"
+        className={classes.appbar}
+        style={{
+          background: "linear-gradient(to right bottom, #03FFE1, #0B98FF)"
+        }}
+      >
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap>
             React to Magic
@@ -171,7 +159,7 @@ const Navbar = ({ authenticated, user, logoutUser }) => {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {user.userType === "admin" && (
-              <Button component={Link} to="/decks" color="inherit">
+              <Button component={Link} to="/admin" color="inherit">
                 Admin Panel
               </Button>
             )}

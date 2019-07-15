@@ -1,10 +1,3 @@
-import {
-  SET_AUTHENTICATED,
-  SET_UNAUTHENTICATED,
-  SET_USER,
-  SET_ERRORS,
-  LOADING_UI
-} from "./types";
 import axios from "axios";
 
 export const login = (userData, history) => dispatch => {

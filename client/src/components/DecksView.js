@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import DecksPanel from "./DeckPanel";
 import DecksForm from "./DeckForm";
 import DecksSearch from "./DecksSearch";
@@ -11,10 +11,8 @@ const DecksView = props => {
       <DecksForm />
       <Divider />
       <br />
-      <Grid container spacing={2} direction="row">
-        <DecksSearch />
-        <DecksPanel />
-      </Grid>
+      <DecksSearch />
+      <DecksPanel />
     </div>
   );
 };

@@ -8,7 +8,8 @@ const theme = createMuiTheme({
     primary: {
       light: "#63ccff",
       main: "#0B98FF",
-      dark: "#0873BF",
+      mainGradient: "linear-gradient(to right, tomato, cyan)",
+      dark: "#0B98FF",
       error: "#ff0000",
       contrastText: "#fff"
     }

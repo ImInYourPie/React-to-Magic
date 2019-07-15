@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, TextField, Button } from "@material-ui/core/"
+import { Grid, Typography, TextField } from "@material-ui/core/"
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -24,10 +24,10 @@ export default function DecksSearch() {
         <Grid container spacing={2}
         alignItems="center"
         direction="row">
-            <Grid item md={2}>
+            <Grid item xs={4} md={2}>
                 <Typography variant="h5">My Decks</Typography>
             </Grid>
-            <Grid item md={10}>
+            <Grid item xs={8} md={10}>
                 <form>
                     <TextField
                         id="standard-name"
@@ -39,6 +39,7 @@ export default function DecksSearch() {
                     />
                 </form>
             </Grid>
+            <br/>
         </Grid>
 
     )

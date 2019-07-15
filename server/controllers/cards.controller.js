@@ -32,8 +32,6 @@ class CardsController {
     static async deleteCard(req, res) {
         const cardId = req.params.id;
         const userId = req.user._id;
-        console.log(cardId)
-        console.log(req.user)
         try {
             const deletedCard = await Card.findOneAndDelete({ _id: cardId, user: userId });
             if (deletedCard) {

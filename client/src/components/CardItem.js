@@ -9,61 +9,100 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { connect, useDispatch } from "react-redux";
 import { deleteCard } from "../actions/cardActions";
+import EditCard from "./EditCard";
 import DialogDelete from "./DialogDelete";
+import { updateCard } from "../actions/cardActions";
 
 const useStyles = makeStyles({
   card: {
-    maxWidth: 345,
     height: "100%"
   },
   media: {
-    height: 300
+    height: 120,
+    backgroundPosition: "top"
   },
-  title: {}
+  desc: {
+    minHeight: 70
+  },
+  title: {
+    minHeight: 40
+  }
 });
 
 function MediaCard(props) {
   const classes = useStyles();
-  const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
+  const [openDelete, setOpenDelete] = React.useState(false);
 
-  const handleDelete = () => {
-    dispatch(deleteCard(props._id));
-  }
+  const openDialog = event => {
+    event.preventDefault();
+    setOpen(true);
+  };
+
+  const closeDialog = () => {
+    setOpen(false);
+  };
+
+  const openDeleteDialog = event => {
+    console.log(props)
+    event.preventDefault();
+    setOpenDelete(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setOpenDelete(false);
+  };
 
   return (
-    <Card className={classes.card}>
-      <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image={props.image}
-          title="Carta Magic"
-        />
-        <CardContent>
-          <Typography
-            className={classes.title}
-            gutterBottom
-            variant="body2"
-            component="h2"
-          >
-            {props.name}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {props.description}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            Mana: {props.mana}
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button size="small" color="primary">
-            Edit
-          </Button>
-          <Button size="small" color="primary" onClick={handleDelete}>
-            Delete
-          </Button>
-        </CardActions>
-      </CardActionArea>
-    </Card>
+    <div>
+      <Card className={classes.card}>
+        <CardActionArea>
+          <CardMedia
+            className={classes.media}
+            image={props.image}
+            title={props.name}
+          />
+          <CardContent>
+            <Typography
+              className={classes.title}
+              gutterBottom
+              variant="body2"
+              component="h4"
+            >
+              {props.name}
+            </Typography>
+            <Typography variant="body3" color="textSecondary" className={classes.desc} component="p">
+              {props.description}
+            </Typography>
+            <Typography variant="body3" color="textSecondary" component="p">
+              Mana: {props.mana}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small" color="primary" onClick={openDialog}>
+              Edit
+            </Button>
+            <Button size="small" color="primary" onClick={openDeleteDialog}>
+              Delete
+            </Button>
+          </CardActions>
+        </CardActionArea>
+      </Card>
+      <EditCard
+        open={open}
+        closeDialog={closeDialog}
+        card={props}
+        updateCard={updateCard}
+        editType={"Card"}
+      />
+      <DialogDelete
+        open={openDelete}
+        closeDialog={closeDeleteDialog}
+        delete={deleteCard}
+        item={props}
+        name={props.name}
+      />
+    </div>
   );
 }
 
