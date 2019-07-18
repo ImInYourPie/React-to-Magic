@@ -10,5 +10,5 @@ export default combineReducers({
     decks: decksReducer,
     user: userReducer,
     UI: uiReducer,
-    users: adminReducer
+    admin: adminReducer
 })

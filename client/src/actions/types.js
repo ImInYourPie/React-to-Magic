@@ -27,6 +27,8 @@ export const SET_USER_ERRORS = "SET_USER_ERRORS";
 // Admin
 export const SET_LOADING_USERS = "SET_LOADING_USERS";
 export const GET_USERS = "GET_USERS";
+export const GET_ADMIN_CARDS = "GET_ADMIN_CARDS";
+export const GET_ADMIN_DECKS = "GET_ADMIN_DECKS";
 export const UPDATE_USER = "UPDATE_USER";
 export const DELETE_USER = "DELETE_USER";
 export const ADMIN_UPDATE_CARD = "ADMIN_UPDATE_CARD";

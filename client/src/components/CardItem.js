@@ -18,11 +18,11 @@ const useStyles = makeStyles({
     height: "100%"
   },
   media: {
-    height: 120,
+    height: 150,
     backgroundPosition: "top"
   },
   desc: {
-    minHeight: 70
+    minHeight: 80
   },
   title: {
     minHeight: 40
@@ -44,7 +44,7 @@ function MediaCard(props) {
   };
 
   const openDeleteDialog = event => {
-    console.log(props)
+    console.log(props);
     event.preventDefault();
     setOpenDelete(true);
   };
@@ -56,37 +56,40 @@ function MediaCard(props) {
   return (
     <div>
       <Card className={classes.card}>
-        <CardActionArea>
-          <CardMedia
-            className={classes.media}
-            image={props.image}
-            title={props.name}
-          />
-          <CardContent>
-            <Typography
-              className={classes.title}
-              gutterBottom
-              variant="body2"
-              component="h4"
-            >
-              {props.name}
-            </Typography>
-            <Typography variant="body3" color="textSecondary" className={classes.desc} component="p">
-              {props.description}
-            </Typography>
-            <Typography variant="body3" color="textSecondary" component="p">
-              Mana: {props.mana}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small" color="primary" onClick={openDialog}>
-              Edit
-            </Button>
-            <Button size="small" color="primary" onClick={openDeleteDialog}>
-              Delete
-            </Button>
-          </CardActions>
-        </CardActionArea>
+        <CardMedia
+          className={classes.media}
+          image={props.image}
+          title={props.name}
+        />
+        <CardContent>
+          <Typography
+            className={classes.title}
+            gutterBottom
+            variant="body2"
+            component="h4"
+          >
+            {props.name}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            className={classes.desc}
+            component="p"
+          >
+            {props.description}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            Mana: {props.mana}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small" color="primary" onClick={openDialog}>
+            Edit
+          </Button>
+          <Button size="small" color="primary" onClick={openDeleteDialog}>
+            Delete
+          </Button>
+        </CardActions>
       </Card>
       <EditCard
         open={open}

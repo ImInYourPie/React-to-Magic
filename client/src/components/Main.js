@@ -5,6 +5,7 @@ import DecksView from "./DecksView";
 import Login from "./Login";
 import Register from "./Register";
 import AdminView from "./AdminView";
+import NotFoundPage from "./NotFoundPage";
 import { connect } from "react-redux";
 
 const Main = ({ authenticated, user }) => {
@@ -40,7 +41,7 @@ const Main = ({ authenticated, user }) => {
         user.userType === "admin" ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/cards" component={CardsView} />
+          <Redirect to="/404" component={CardsView} />
         )
       }
     />
@@ -52,8 +53,10 @@ const Main = ({ authenticated, user }) => {
         <PrivateAuthRoute path="/register" component={Register} />
         <PrivateUIRoute path="/cards" component={CardsView} />
         <PrivateUIRoute path="/decks" component={DecksView} />
+        <Route exact path="/" component={CardsView} />
         <PrivateAdminRoute path="/admin" component={AdminView} />
-        <Redirect to="/cards" />
+        <Route path="/404" component={NotFoundPage} />
+        <Redirect to="/404" />
       </Switch>
     </main>
   );

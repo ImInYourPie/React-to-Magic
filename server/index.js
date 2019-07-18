@@ -3,19 +3,24 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const config = require("./config/database");
-require('dotenv').config();
+const path = require("path");
+require("dotenv").config();
 
 // CONNECT TO DATABASE
-mongoose.connect(config.database, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false });
+mongoose.connect(config.database, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false
+});
 
 let db = mongoose.connection;
 
 db.once("open", () => {
-    console.log("Connected to MongoDB Atlas");
+  console.log("Connected to MongoDB Atlas");
 });
 
-db.on("error", (err) => {
-    console.log(err);
+db.on("error", err => {
+  console.log(err);
 });
 
 // EXPRESS APP
@@ -24,12 +29,12 @@ const app = express();
 // BODY-PARSER
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(require("connect-history-api-fallback")());
 
 // CORS FOR CROSS ORIGIN
 app.use(cors());
 
-
-require("./config/passport")
+require("./config/passport");
 
 // IMPORT ROUTES
 const register = require("./routes/register");
@@ -45,8 +50,14 @@ app.use("/cards", cards);
 app.use("/decks", decks);
 app.use("/admin", admin);
 
+process.env.NODE_ENV = "production";
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(__dirname + "/build"));
+  app.get(/.*/, (req, res) => res.sendFile(__dirname + "/build/index.html"));
+}
+
 // PORT
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
+  console.log(`App listening on port ${port}`);
 });

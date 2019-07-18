@@ -29,6 +29,7 @@ export default function FormDialog(props) {
     setUsername(props.user.username);
     setRealname(props.user.realName);
     setUsertype(props.user.userType);
+    setError(null);
     props.closeDialog();
   }
 
@@ -42,6 +43,7 @@ export default function FormDialog(props) {
       realname === props.user.realName &&
       usertype === props.user.userType
     ) {
+      setError(null);
       props.closeDialog();
     } else {
       console.log(props.user._id);
@@ -74,6 +76,7 @@ export default function FormDialog(props) {
           </Typography>
           <br />
           <TextField
+            autoFocus
             id="standard"
             label="Username"
             value={username}
@@ -88,7 +91,6 @@ export default function FormDialog(props) {
             margin="dense"
           />
           <TextField
-            autoFocus
             variant="outlined"
             value={realname}
             margin="dense"

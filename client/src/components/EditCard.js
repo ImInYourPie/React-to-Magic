@@ -14,6 +14,12 @@ export default function FormDialog(props) {
   const [description, setDescription] = React.useState(props.card.description);
   const dispatch = useDispatch();
 
+  React.useEffect(() => {
+    setMana(props.card.mana);
+    setName(props.card.name);
+    setDescription(props.card.description);
+  }, [props]);
+
   function handleClose() {
     setMana(props.card.mana);
     setName(props.card.name);
@@ -44,6 +50,7 @@ export default function FormDialog(props) {
         <DialogTitle id="form-dialog-title">Edit {props.editType}</DialogTitle>
         <DialogContent>
           <TextField
+            autoFocus
             id="standard-number"
             label="Mana"
             InputProps={{ inputProps: { min: 1, max: 9 } }}
@@ -59,7 +66,6 @@ export default function FormDialog(props) {
             margin="dense"
           />
           <TextField
-            autoFocus
             variant="outlined"
             value={name}
             margin="dense"
@@ -73,7 +79,6 @@ export default function FormDialog(props) {
             fullWidth
           />
           <TextField
-            autoFocus
             variant="outlined"
             value={description}
             margin="dense"
@@ -88,11 +93,11 @@ export default function FormDialog(props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
           <Button onClick={event => handleSave(event)} color="primary">
             Update
+          </Button>
+          <Button onClick={handleClose} color="primary">
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,8 +1,7 @@
 import React from "react";
 import MaterialTable from "material-table";
 import { useSelector, useDispatch } from "react-redux";
-import { getUsers, deleteUser, updateUser} from "../actions/adminActions";
-import Axios from "axios";
+import { deleteUser, updateUser } from "../actions/adminActions";
 import EditUser from "./EditUser";
 import DialogDelete from "./DialogDelete";
 
@@ -11,6 +10,7 @@ export default function UserTable(props) {
   const [open, setOpen] = React.useState(false);
   const [userToEdit, setUserToEdit] = React.useState({});
   const [openDelete, setOpenDelete] = React.useState(false);
+  const loggedUser = useSelector(state => state.user.user);
 
   // React.useEffect(() => {}, [props.users]);
 
@@ -33,7 +33,7 @@ export default function UserTable(props) {
 
   const openDeleteDialog = (event, user) => {
     event.preventDefault();
-    setUserToEdit(user)
+    setUserToEdit(user);
     setOpenDelete(true);
   };
 
@@ -60,7 +60,11 @@ export default function UserTable(props) {
             icon: "delete",
             tooltip: "Delete User",
             onClick: (event, rowData) => {
-              openDeleteDialog(event, rowData);
+              if (loggedUser.username === rowData.username) {
+                return alert("You can't delete yourself");
+              } else {
+                openDeleteDialog(event, rowData);
+              }
             }
           },
           {
@@ -72,7 +76,13 @@ export default function UserTable(props) {
           }
         ]}
       />
-      <EditUser open={open} user={userToEdit} closeDialog={closeDialog} updateUser={updateUser} editType={userToEdit.username}/>
+      <EditUser
+        open={open}
+        user={userToEdit}
+        closeDialog={closeDialog}
+        updateUser={updateUser}
+        editType={userToEdit.username}
+      />
       <DialogDelete
         open={openDelete}
         closeDialog={closeDeleteDialog}

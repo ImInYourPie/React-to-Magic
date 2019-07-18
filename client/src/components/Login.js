@@ -10,8 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/styles";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { login } from "../actions/userActions";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -35,6 +36,17 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  buttonProgress: {
+    position: "absolute",
+    top: "55%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative"
   }
 }));
 
@@ -42,6 +54,7 @@ function SignIn(props) {
   const classes = useStyles();
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const loading = useSelector(state => state.UI.loading);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -101,15 +114,21 @@ function SignIn(props) {
               </Grid>
             </Grid>
           )}
-          <Button
-            className={classes.submit}
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-          >
-            Login
-          </Button>
+          <div className={classes.wrapper}>
+            <Button
+              className={classes.submit}
+              type="submit"
+              fullWidth
+              disabled={loading}
+              variant="contained"
+              color="primary"
+            >
+              Login
+            </Button>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
           <Grid container justify="center">
             <Grid item align="center">
               <MuiLink component={Link} to="/register" variant="body2">

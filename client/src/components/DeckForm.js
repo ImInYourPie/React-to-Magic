@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
-import DeckBuilder from "./DeckBuilder";
+import DeckBuilder from "./DeckBuilderTest";
 import { getCards } from "../actions/cardActions";
 import { addDeck } from "../actions/deckActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,13 +31,12 @@ const CardForm = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
-  let cards = []
+  let cards = [];
 
-  console.log(cards)
+  console.log(cards);
   React.useEffect(() => {
-    dispatch(getCards())
-  }, [])
-  
+    dispatch(getCards());
+  }, []);
 
   // React.useEffect(() => {
   //   async function fetchCards() {
@@ -49,10 +48,9 @@ const CardForm = props => {
   //   fetchCards()
   // }, [])
 
-
   const openDialog = async event => {
-    event.preventDefault()
-    cards = await (dispatch(getCards()));
+    event.preventDefault();
+    cards = await dispatch(getCards());
     setOpen(true);
     console.log(open);
   };

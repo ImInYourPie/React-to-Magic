@@ -20,6 +20,7 @@ import { addDeck } from "../actions/deckActions";
 import TextField from "@material-ui/core/TextField";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
+import { SnackbarProvider, useSnackbar } from "notistack";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -56,6 +57,7 @@ const FullScreenDialog = ({
   _id
 }) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([]);
   const [right, setRight] = React.useState([]);
@@ -131,6 +133,9 @@ const FullScreenDialog = ({
       };
       dispatch(action(deckData));
       setRight(currentCards);
+      enqueueSnackbar(`Deck ${deckData.name} added`, {
+        variant: "info"
+      });
       setLeft(_.differenceBy(cards, currentCards, "_id"));
       setName(currentName);
       setError("");

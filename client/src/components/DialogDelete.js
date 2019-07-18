@@ -7,6 +7,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { useDispatch } from "react-redux";
+import { SnackbarProvider, useSnackbar } from "notistack";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -14,6 +15,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AlertDialogSlide(props) {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   function handleClose() {
     props.closeDialog();
@@ -22,6 +24,9 @@ export default function AlertDialogSlide(props) {
   function handleDelete(event) {
     event.preventDefault();
     dispatch(props.delete(props.item._id));
+    enqueueSnackbar(`Deleted ${props.name}`, {
+      variant: "info"
+    });
     props.closeDialog();
   }
 
@@ -34,18 +39,18 @@ export default function AlertDialogSlide(props) {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Attention!"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">Attention!</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Are you sure you want to delete {props.name}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            No
-          </Button>
           <Button onClick={event => handleDelete(event)} color="primary">
             Yes
+          </Button>
+          <Button onClick={handleClose} color="primary">
+            No
           </Button>
         </DialogActions>
       </Dialog>

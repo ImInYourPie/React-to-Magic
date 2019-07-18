@@ -10,8 +10,10 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { register, login } from "../actions/userActions";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -35,6 +37,17 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  buttonProgress: {
+    position: "absolute",
+    top: "55%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative"
   }
 }));
 
@@ -44,17 +57,30 @@ function SignUp(props) {
   const [realname, setRealname] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [emptyUsername, setEmptyUsername] = useState(false);
+  const [emptyRealname, setEmptyRealname] = useState(false);
+  const [emptyPassword, setEmptyPassword] = useState(false);
+  const [emptyConfirmPass, setEmptyConfirmPass] = useState(false);
+  const [confirmPassError, setConfirmPassError] = useState(false);
+  const loading = useSelector(state => state.UI.loading);
+  // const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = async event => {
     event.preventDefault();
-    const userData = {
-      username: username,
-      realname: realname,
-      password: password,
-      confirmPassword: confirmPassword
-    };
-    console.log(userData);
-    props.register(userData, props.history);
+    !username ? setEmptyUsername(true) : setEmptyUsername(false);
+    !realname ? setEmptyRealname(true) : setEmptyRealname(false);
+    !password ? setEmptyPassword(true) : setEmptyPassword(false);
+    !confirmPassword ? setEmptyConfirmPass(true) : setEmptyConfirmPass(false);
+    if (password !== confirmPassword) return setConfirmPassError(true);
+    else if (username && password && realname && confirmPassword) {
+      const userData = {
+        username: username,
+        realname: realname,
+        password: password,
+        confirmPassword: confirmPassword
+      };
+      props.register(userData, props.history);
+    }
   };
 
   return (
@@ -67,7 +93,7 @@ function SignUp(props) {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <form onSubmit={handleSubmit} className={classes.form}>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -78,7 +104,8 @@ function SignUp(props) {
                 id="username"
                 label="Username"
                 autoFocus
-                error={props.errors}
+                helperText={emptyUsername ? "Fill in this field" : ""}
+                error={emptyUsername || props.errors}
                 value={username}
                 onChange={event => setUsername(event.target.value)}
               />
@@ -91,7 +118,8 @@ function SignUp(props) {
                 id="realname"
                 label="Real Name"
                 name="realname"
-                error={props.errors}
+                helperText={emptyRealname ? "Fill in this field" : ""}
+                error={emptyRealname || props.errors}
                 value={realname}
                 onChange={event => setRealname(event.target.value)}
               />
@@ -105,7 +133,8 @@ function SignUp(props) {
                 label="Password"
                 type="password"
                 id="password"
-                error={props.errors}
+                helperText={emptyPassword ? "Fill in this field" : ""}
+                error={props.errors || emptyPassword || confirmPassError}
                 value={password}
                 onChange={event => setPassword(event.target.value)}
               />
@@ -118,7 +147,14 @@ function SignUp(props) {
                 name="passwordConfirm"
                 label="Confirm Password"
                 type="password"
-                error={props.errors}
+                helperText={
+                  emptyConfirmPass
+                    ? "Fill in this field"
+                    : "" || confirmPassError
+                    ? "Passwords don't match"
+                    : ""
+                }
+                error={props.errors || emptyConfirmPass || confirmPassError}
                 id="passwordConfirm"
                 value={confirmPassword}
                 onChange={event => setConfirmPassword(event.target.value)}
@@ -139,15 +175,21 @@ function SignUp(props) {
               </Grid>
             </Grid>
           )}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Register
-          </Button>
+          <div className={classes.wrapper}>
+            <Button
+              type="submit"
+              fullWidth
+              disabled={loading}
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Register
+            </Button>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
           <Grid container justify="center">
             <Grid item>
               <MuiLink component={Link} to="/login" variant="body2">

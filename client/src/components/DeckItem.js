@@ -13,7 +13,7 @@ import Button from "@material-ui/core/Button";
 import { deleteDeck, updateDeck } from "../actions/deckActions";
 import DialogDelete from "./DialogDelete";
 import { useDispatch } from "react-redux";
-import DeckBuilder from "./DeckBuilder";
+import DeckBuilder from "./DeckBuilderTest";
 
 const useStyles = makeStyles({
   card: {

@@ -41,7 +41,7 @@ export const deleteCard = cardId => dispatch => {
   axios
     .delete(`/cards/delete/${cardId}`)
     .then(() => {
-      console.log(cardId)
+      console.log(cardId);
       dispatch({
         type: "DELETE_CARD",
         payload: cardId
@@ -72,3 +72,7 @@ export const updateCard = cardData => dispatch => {
       dispatch({ type: "SET_ERRORS", payload: error.response.data });
     });
 };
+
+// export const filterCards = filterText => dispatch => {
+//   dispatch({ type: "FILTER_CARDS", payload: filterText });
+// };

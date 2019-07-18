@@ -12,6 +12,7 @@ import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logoutUser } from "../actions/userActions";
+import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -78,7 +79,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Navbar = ({ authenticated, user, logoutUser }) => {
+const Navbar = ({ authenticated, user, logoutUser, history }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -100,7 +101,7 @@ const Navbar = ({ authenticated, user, logoutUser }) => {
   }
 
   const handleLogout = () => {
-    logoutUser();
+    logoutUser(history);
   };
 
   const mobileMenuId = "primary-search-account-menu-mobile";
@@ -222,4 +223,4 @@ const mapActionsToProps = { logoutUser };
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(Navbar);
+)(withRouter(Navbar));
