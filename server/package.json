@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./tests/tests.test.js --recursive --exit"
   },
   "author": "Miguel Melo",
   "license": "MIT",
@@ -12,15 +12,24 @@
     "@hapi/joi": "^15.1.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-json": "^1.0.0",
     "connect-history-api-fallback": "^1.6.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^6.2.0",
+    "mockgoose": "^8.0.2",
     "mongoose": "^5.6.2",
     "mongoose-unique-validator": "^2.0.3",
     "nodemon": "^1.19.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0"
+  },
+  "devDependencies": {
+    "jest": "^24.8.0",
+    "node-mocks-http": "^1.7.6",
+    "supertest": "^4.0.2"
   }
 }

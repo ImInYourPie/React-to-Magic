@@ -6,7 +6,10 @@ const RegistrationValidator = require("../validations/registration.validation");
 // test
 router.get("/", AuthenticationController.test);
 
-router.post("/", RegistrationValidator.validate, AuthenticationController.register);
-
+router.post(
+  "/",
+  RegistrationValidator.validate,
+  AuthenticationController.register
+);
 
 module.exports = router;

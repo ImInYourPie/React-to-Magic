@@ -135,7 +135,7 @@ class AdminController {
           user: currentCard.user
         });
         newNotification.save();
-        res.status(203).send({ success: `Card ${req.body.name} updated` });
+        res.status(200).send({ success: `Card ${req.body.name} updated` });
       } catch (error) {
         res.status(400).send(error);
       }
@@ -168,7 +168,7 @@ class AdminController {
           user: currentDeck.user
         });
         newNotification.save();
-        res.status(203).send({ success: `Deck ${req.body.name} updated` });
+        res.status(200).send({ success: `Deck ${req.body.name} updated` });
       } catch (error) {
         res.status(400).send(error);
       }
@@ -180,6 +180,13 @@ class AdminController {
       return res
         .status(403)
         .send({ error: "You don't have permision to view this resource" });
+    } else if (
+      req.body.userType == "default" &&
+      req.user._id == req.params.id
+    ) {
+      return res.status(400).send({
+        error: "You can't remove yourself from administrative privileges"
+      });
     } else {
       try {
         const userId = req.params.id;
@@ -198,7 +205,7 @@ class AdminController {
           user: req.params.id
         });
         newNotification.save();
-        res.status(203).send({ success: `User ${req.body.name} updated` });
+        res.status(200).send({ success: `User ${req.body.username} updated` });
       } catch (error) {
         res.status(400).send(error);
       }
@@ -210,13 +217,15 @@ class AdminController {
       return res
         .status(403)
         .send({ error: "You don't have permision to view this resource" });
+    } else if (req.user._id == req.params.id) {
+      return res.status(400).send({ error: "You can't delete yourself" });
     } else {
       try {
         const userId = req.params.id;
         await User.findByIdAndDelete(userId);
         await Card.find({ user: userId }).remove();
         await Deck.find({ user: userId }).remove();
-        res.status(203).send({
+        res.status(200).send({
           success: `The user, his cards, and his decks were deleted with success`
         });
       } catch (error) {

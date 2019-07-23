@@ -6,12 +6,21 @@ const config = require("./config/database");
 const path = require("path");
 require("dotenv").config();
 
+console.log(process.env.NODE_ENV);
 // CONNECT TO DATABASE
-mongoose.connect(config.database, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false
-});
+if (process.env.NODE_ENV === "test") {
+  mongoose.connect(config.testDatabase, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  });
+} else {
+  mongoose.connect(config.database, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  });
+}
 
 let db = mongoose.connection;
 
@@ -50,7 +59,7 @@ app.use("/cards", cards);
 app.use("/decks", decks);
 app.use("/admin", admin);
 
-process.env.NODE_ENV = "production";
+// process.env.NODE_ENV = "production";
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(__dirname + "/build"));
   app.get(/.*/, (req, res) => res.sendFile(__dirname + "/build/index.html"));
@@ -61,3 +70,5 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
+
+module.exports = { app: app, db: db };

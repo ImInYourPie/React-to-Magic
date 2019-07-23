@@ -147,6 +147,7 @@ const Navbar = ({ authenticated, user, logoutUser, history }) => {
   return (
     <div className={classes.grow}>
       <AppBar
+        data-test="navbar"
         position="static"
         className={classes.appbar}
         style={{
@@ -223,4 +224,4 @@ const mapActionsToProps = { logoutUser };
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withRouter(Navbar));
+)(Navbar);
